@@ -7,5 +7,6 @@
             "email": "tziegler@googlemail.com"
         }
     ],
+    "license": "MIT",
     "require": {}
 }
