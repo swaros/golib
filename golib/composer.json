@@ -1,0 +1,11 @@
+{
+    "name": "vendor/golib",
+    "description": "shared php tools lib.",
+    "authors": [
+        {
+            "name": "Thomas Ziegler",
+            "email": "tziegler@googlemail.com"
+        }
+    ],
+    "require": {}
+}
