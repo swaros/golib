@@ -34,21 +34,18 @@ now simply initiate the new class by using the value that should be used.
 
 this is a Enum that can be used just by adding 'const' like so
 
-   use golib\Types\ConstEnum;
-   class MyEnum extends ConstEnum {
+    use golib\Types\ConstEnum;
+    class MyEnum extends ConstEnum {
       const INTEGER = 1;
       const STRING = 2;
       const ARRAY = 3;
-   }
+    }
 the usage is the same as Enum but you can use the 'const' what improves the codestyle.
 
-  $myEnum = new MyEnum(MyEnum::INTEGER); // of course valid
-  
-  $value = 2;
-  $myEnum = new MyEnum($value); // also valid because 2 is defined as ARRAY
-  
-  $myEnum = new MyEnum(6); // will throw a EnumException
-  
-  $myEnum = new MyEnum(6, EnumDef::ERROR_MODE_TRIGGER_ERROR); // instead of a exception a error is triggered
+    $myEnum = new MyEnum(MyEnum::INTEGER); // of course valid
+    $value = 2;
+    $myEnum = new MyEnum($value); // also valid because 2 is defined as ARRAY
+    $myEnum = new MyEnum(6); // will throw a EnumException
+    $myEnum = new MyEnum(6, EnumDef::ERROR_MODE_TRIGGER_ERROR); // instead of a exception a error is triggered
   
     
