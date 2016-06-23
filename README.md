@@ -1,12 +1,12 @@
 # golib
 basic php tools lib. Includes a xpath based Xml Reader and Define some Types like Enums or Propertie Classes
 
-## Install
+#### Install
 
 you can get this lib via composer `composer require gorgo/golib`
 
 
-## Enum
+### Enum
 
 The basic Enum Class provides a easy Way to check against valid Entires. Extends from Enum and define a Array inside the method 'getPossibleValueArray()' that contains all possible values.
 ```php
@@ -26,7 +26,7 @@ $exceptionEnum = new MyEnum('g'); // a EnumException will be Trown beause g is n
 
 $failEnum = new MyEnum('g',EnumDef::ERROR_MODE_TRIGGER_ERROR); // just triggers an PHP error
 ```
-## ConstEnum
+### ConstEnum
 
 this is a Enum that can be used just by adding 'const' like so
 ```php
@@ -46,7 +46,7 @@ $myEnum = new MyEnum(6); // will throw a EnumException
 $myEnum = new MyEnum(6, EnumDef::ERROR_MODE_TRIGGER_ERROR); // instead of a exception a error is triggered
 ```
 
-## Props
+### Props
 
 the `Props` class is the Object oriented way to work with Content that will be provided as Array.
 For example Database results:
