@@ -1,6 +1,9 @@
 {
     "name": "gorgo/golib",
+    "type": "library",
+    "keywords": ["enums", "enum", "properties"],
     "description": "shared php tools lib.",
+    "homepage": "https://github.com/swaros/golib",
     "authors": [
         {
             "name": "Thomas Ziegler",
