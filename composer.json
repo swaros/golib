@@ -1,5 +1,5 @@
 {
-    "name": "vendor/golib",
+    "name": "gorgo/golib",
     "description": "shared php tools lib.",
     "authors": [
         {
