@@ -3,9 +3,7 @@ basic php tools lib. Includes a xpath based Xml Reader and Define some Types lik
 
 ## Install
 
-you can get this lib via composer
-
-' composer require gorgo/golib '
+you can get this lib via composer `composer require gorgo/golib`
 
 
 ## Enum
@@ -47,4 +45,50 @@ $myEnum = new MyEnum($value); // also valid because 2 is defined as ARRAY
 $myEnum = new MyEnum(6); // will throw a EnumException
 $myEnum = new MyEnum(6, EnumDef::ERROR_MODE_TRIGGER_ERROR); // instead of a exception a error is triggered
 ```
+
+## Props
+
+the `Props` class is the Object oriented way to work with Content that will be provided as Array.
+For example Database results:
+
+The regular way to work with these looks like so
+```php
+$query = sprintf("SELECT firstname, lastname, address, age FROM friends ");
+$result = mysql_query($query);
+while ($row = mysql_fetch_assoc($result)) {
+    echo $row['firstname'];
+    echo $row['lastname'];
+    echo $row['address'];
+    echo $row['age'];
+}
+
+```
+That means youre code depends on the database design. And if you access this data later, for exampel in another class, you have to know about the database structure.
+Also it will be difficult if on some point the database will be refactored.
+
+`Props` is a Container that forces OOP Style to accessing this data.
+Like so:
+```php
+use golib\Props;
+class Person extends Props {
+    public $firstname = NULL;
+    public $lastname = NULL;
+    public $adress = NULL;
+    public $age = NULL;
+}
+```
+the usage looks like over engineered but just shows the different way to acess the data.
+```php
+$result = mysql_query($query);
+while ($row = mysql_fetch_assoc($result)) {
+    $person = new Person($row);
+    echo $person->firstname;
+    echo $person->lastname;
+    echo $person->adress;
+    echo $person->age;
+}
+
+```
+All modern IDE's support code completion so the usage of `Props` will help you to get the right propertie.
+
 
