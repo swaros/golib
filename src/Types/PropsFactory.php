@@ -69,6 +69,10 @@ abstract class PropsFactory extends Props{
         return array_keys(self::$__ids[$this->getClassKey()]);
     }
 
+    public function getPrimaryKey(){
+        return $this->__keyName;
+    }
+
     /**
      * set the classname
      * @param type $name
