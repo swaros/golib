@@ -78,5 +78,13 @@ abstract class Props {
             $this->$propName = $propValue;
         }
     }
+    
+    public function __clone () {
+        foreach ($this as $name => &$var) {
+            if (is_object( $var )) {
+                $var = clone $var;
+            }
+        }
+    }
 
 }

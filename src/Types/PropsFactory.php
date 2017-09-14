@@ -51,6 +51,14 @@ abstract class PropsFactory extends Props{
     }
 
     /**
+    * gets the current primary key
+    * @return string the primary key
+    */
+    public function getPrimaryKey(){
+        return $this->__keyName;
+    }
+
+    /**
      * ovewrite parent becasue of catching all
      * props
      * @param array $data
