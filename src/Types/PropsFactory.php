@@ -1,4 +1,5 @@
 <?php
+
 namespace golib\Types;
 
 /**
@@ -6,15 +7,12 @@ namespace golib\Types;
  *
  * @author tziegler
  */
-abstract class PropsFactory extends Props{
+abstract class PropsFactory extends Props {
 
     private static $propData = array();
     private static $keyCache = array();
-
     private $__objectName = NULL;
-
     private $__keyName = NULL;
-
     private static $__ids = array();
 
     /**
@@ -25,15 +23,16 @@ abstract class PropsFactory extends Props{
      * @param array $data
      * @throws \InvalidArgumentException
      */
-    public function __construct($primaryKeyName,array $data = NULL, $classname = NULL) {
-        if ($primaryKeyName === NULL || !is_string($primaryKeyName)){
-            throw new \InvalidArgumentException("Keyname is needed");
+    public function __construct ( $primaryKeyName, array $data = NULL,
+                                  $classname = NULL ) {
+        if ($primaryKeyName === NULL || !is_string( $primaryKeyName )) {
+            throw new \InvalidArgumentException( "Keyname is needed" );
         }
         $this->__keyName = $primaryKeyName;
-        if ($classname != NULL){
+        if ($classname != NULL) {
             $this->__objectName = $classname;
         }
-        parent::__construct($data);
+        parent::__construct( $data );
     }
 
     /**
@@ -41,13 +40,12 @@ abstract class PropsFactory extends Props{
      * @param string $key
      * @return string
      */
-    private function getKey($key = NULL){
+    private function getKey ( $key = NULL ) {
         if ($key === NULL) {
             $key = $this->__keyName;
             return $this->getClassKey() . '_' . $this->$key;
         }
         return $this->getClassKey() . '_' . $key;
-
     }
 
     /**
@@ -63,9 +61,9 @@ abstract class PropsFactory extends Props{
      * props
      * @param array $data
      */
-    public function applyData($data = NULL) {
-        parent::applyData($data);
-        if ($data !=null){
+    public function applyData ( $data = NULL ) {
+        parent::applyData( $data );
+        if ($data != null) {
             self::$propData[$this->getKey()] = $this;
             self::$keyCache[$this->getClassKey()] = $this->__keyName;
             $key = $this->__keyName;
@@ -73,19 +71,15 @@ abstract class PropsFactory extends Props{
         }
     }
 
-    public function getIds(){
-        return array_keys(self::$__ids[$this->getClassKey()]);
-    }
-
-    public function getPrimaryKey(){
-        return $this->__keyName;
+    public function getIds () {
+        return array_keys( self::$__ids[$this->getClassKey()] );
     }
 
     /**
      * set the classname
      * @param type $name
      */
-    public function setClassName($name){
+    public function setClassName ( $name ) {
         $this->__objectName = $name;
     }
 
@@ -93,11 +87,11 @@ abstract class PropsFactory extends Props{
      * returns class specific key
      * @return string
      */
-    private function getClassKey(){
-        if ($this->__objectName != NULL){
+    private function getClassKey () {
+        if ($this->__objectName != NULL) {
             return $this->__objectName;
         }
-        return get_class($this);
+        return get_class( $this );
     }
 
     /**
@@ -106,9 +100,9 @@ abstract class PropsFactory extends Props{
      * @param mixed $id
      * @return self
      */
-    public function getProps($id){
-        if (isset(self::$propData[$this->getKey($id)])){
-            return self::$propData[$this->getKey($id)];
+    public function getProps ( $id ) {
+        if (isset( self::$propData[$this->getKey( $id )] )) {
+            return self::$propData[$this->getKey( $id )];
         }
         return NULL;
     }
@@ -120,9 +114,9 @@ abstract class PropsFactory extends Props{
      * @param mixed $id
      * @return self
      */
-    public function fetch($id){
-        if (isset(self::$propData[$this->getKey($id)])){
-            return self::$propData[$this->getKey($id)];
+    public function fetch ( $id ) {
+        if (isset( self::$propData[$this->getKey( $id )] )) {
+            return self::$propData[$this->getKey( $id )];
         }
         return false;
     }
@@ -131,23 +125,22 @@ abstract class PropsFactory extends Props{
      * copy propertie to self
      * @param self $source
      */
-    private function copyProps(self $source){
-        foreach ($source as $keyName => $data){
-            if (substr($keyName, 0,2) !== '__'){
+    private function copyProps ( self $source ) {
+        foreach ($source as $keyName => $data) {
+            if (substr( $keyName, 0, 2 ) !== '__') {
                 $this->$keyName = $data;
             }
         }
     }
-
 
     /**
      *
      * @param type $id
      * @return self
      */
-    public static function factory($id){
-        $key = get_called_class() .'_'. $id;
-        if (isset(self::$propData[$key])){
+    public static function factory ( $id ) {
+        $key = get_called_class() . '_' . $id;
+        if (isset( self::$propData[$key] )) {
             return self::$propData[$key];
         }
         return NULL;
@@ -160,8 +153,9 @@ abstract class PropsFactory extends Props{
      * @param type $id
      * @return type
      */
-    public static function dataExists($id){
-        $key = get_called_class() .'_'. $id;
-        return isset(self::$propData[$key]);
+    public static function dataExists ( $id ) {
+        $key = get_called_class() . '_' . $id;
+        return isset( self::$propData[$key] );
     }
+
 }
