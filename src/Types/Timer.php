@@ -135,7 +135,7 @@ class Timer implements Types {
         }
 
         if ($this->fitNonExistingDates && $this->isNonExistingTimeString( $time )) {
-            $time = $this->getPossibleDateString( $timeString );
+            $time = $this->getPossibleDateString( $time );
         }
 
         return (is_string( $time ) && strlen( $time ) == 19 && $time == date( 'Y-m-d H:i:s',
