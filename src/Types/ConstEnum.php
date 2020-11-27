@@ -7,8 +7,8 @@ use ReflectionException;
 
 /**
  * abstract class to use enum in a way to define all
- * possible bvalues as  a constant instead define
- * a seperate array. so just extend from this class
+ * possible values as a constant instead define
+ * a separate array. so just extend from this class
  * and add all constants
  */
 abstract class ConstEnum extends Enum

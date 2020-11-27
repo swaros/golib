@@ -1,4 +1,5 @@
 <?php
+
 namespace golib\Types;
 
 /**
@@ -6,7 +7,8 @@ namespace golib\Types;
  *
  * @author tziegler
  */
-abstract class PropChain extends Props{
+abstract class PropChain extends Props
+{
 
     /**
      * next property in chain
@@ -19,7 +21,8 @@ abstract class PropChain extends Props{
      * @param PropChain $prop
      * @return PropChain
      */
-    public function applyProp(PropChain $prop){
+    public function applyProp(PropChain $prop): self
+    {
         $this->__next = $prop;
         return $this->getChild();
     }
@@ -28,10 +31,11 @@ abstract class PropChain extends Props{
      *
      * @return PropChain
      */
-    public function getLastPropInChain(){
-        if ($this->hasChild()){
+    public function getLastPropInChain()
+    {
+        if ($this->hasChild()) {
             $prop = $this->getChild();
-            while($prop->getChild()->hasChild()){
+            while ($prop->getChild()->hasChild()) {
                 $prop = $prop->getChild();
             }
             return $prop;
@@ -40,7 +44,8 @@ abstract class PropChain extends Props{
     }
 
 
-    public function hasChild(){
+    public function hasChild()
+    {
         return ($this->__next !== NULL && $this->__next instanceof Props);
     }
 
@@ -48,7 +53,8 @@ abstract class PropChain extends Props{
      * get the next Property
      * @return PropChain
      */
-    public function getChild(){
+    public function getChild(): self
+    {
         return $this->__next;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace golib\Types;
 
 /**
@@ -9,21 +10,24 @@ namespace golib\Types;
  * properties that ignores case sensitive keys
  * to solve renaming issues
  */
-class PropIgnoreCase extends Props{
+class PropIgnoreCase extends Props
+{
 
-    public function __construct($data = NULL) {
+    public function __construct($data = NULL)
+    {
 
-        foreach ($this as $key => $dummy){
+        foreach ($this as $key => $dummy) {
             $this->findMatch($key, $data);
         }
 
         parent::__construct($data);
     }
 
-    private function findMatch($origin ,array &$data){
+    private function findMatch($origin, array &$data)
+    {
         $lower = strtolower($origin);
-        foreach ($data as $key => $value){
-            if ($lower == strtolower($key)){
+        foreach ($data as $key => $value) {
+            if ($lower == strtolower($key)) {
                 unset($data[$key]);
                 $data[$origin] = $value;
             }

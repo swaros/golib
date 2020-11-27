@@ -2,6 +2,8 @@
 
 namespace golib\Types;
 
+use InvalidArgumentException;
+
 /**
  * Description of Enum Set
  *
@@ -46,7 +48,7 @@ abstract class EnumSet
      * checks if given $value
      * valid
      * @param array $valueSet
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws EnumException
      */
     private function checkValue(array $valueSet)
