@@ -14,7 +14,7 @@ namespace golib\Types;
  */
 abstract class Props {
 
-    private static $replaceChars = array(
+    private static array $replaceChars = array(
         '.',
         '#',
         '_',
@@ -23,17 +23,17 @@ abstract class Props {
 
     /**
      *
-     * @param array $data
+     * @param null|array|object $data
      */
-    public function __construct ( $data = NULL ) {
+    public function __construct (array|object $data = NULL) {
         $this->applyData( $data );
     }
 
     /**
      * apply given data to properties
-     * @param array $data
+     * @param array|object|null $data
      */
-    public function applyData ( $data = NULL ) {
+    public function applyData (array|object $data = NULL ) {
         if (NULL != $data && is_array( $data )) {
             foreach ($data as $propName => $propValue) {
                 $this->assignValue( $propName, $propValue );
@@ -53,12 +53,12 @@ abstract class Props {
     }
 
     /**
-     * assign value to a existing propertie and
+     * assign value to a existing property and
      * cast depending on defined default value
      * @param string $propName
-     * @param boolean $propValue
+     * @param mixed $propValue
      */
-    public function assignExisting ( $propName, $propValue ) {
+    public function assignExisting (string $propName, $propValue ) {
         if (is_bool( $this->$propName )) {
             if (strtolower( $propValue ) == 'false') {
                 $propValue = false;
@@ -81,7 +81,7 @@ abstract class Props {
      * @param string $propNameOrig
      * @param mixed $propValue
      */
-    public function assignValue ( $propNameOrig, $propValue ) {
+    public function assignValue (string $propNameOrig, $propValue ) {
         $propNameA = str_replace( self::$replaceChars, '_', $propNameOrig );
         $propName = preg_replace( "/[^A-Za-z0-9_]/", "", $propNameA );
         if (property_exists( $this, $propName ) && $this->$propName !== NULL) {

@@ -9,15 +9,15 @@ namespace golib\Types;
 abstract class PropChain extends Props{
 
     /**
-     * next propertie in chain
-     * @var PropChain
+     * next property in chain
+     * @var PropChain|null
      */
-    private $__next = NULL;
+    private ?PropChain $__next = NULL;
 
     /**
      *
-     * @param \golib\Types\PropChain $prop
-     * @return \golib\Types\PropChain
+     * @param PropChain $prop
+     * @return PropChain
      */
     public function applyProp(PropChain $prop){
         $this->__next = $prop;
@@ -26,7 +26,7 @@ abstract class PropChain extends Props{
 
     /**
      *
-     * @return \golib\Types\PropChain
+     * @return PropChain
      */
     public function getLastPropInChain(){
         if ($this->hasChild()){
@@ -45,7 +45,7 @@ abstract class PropChain extends Props{
     }
 
     /**
-     * get the next Propertie
+     * get the next Property
      * @return PropChain
      */
     public function getChild(){

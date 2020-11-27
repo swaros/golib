@@ -2,45 +2,50 @@
 
 namespace golib\Types;
 
+use InvalidArgumentException;
+
 /**
  * Description of PropsFactory
  *
  * @author tziegler
  */
-abstract class PropsFactory extends Props {
+abstract class PropsFactory extends Props
+{
 
-    private static $propData = array();
-    private static $keyCache = array();
-    private $__objectName = NULL;
-    private $__keyName = NULL;
-    private static $__ids = array();
+    private static array $propData = array();
+    private static array $keyCache = array();
+    private string|null $__objectName = NULL;
+    private string|null $__keyName = NULL;
+    private static array $__ids = array();
 
     /**
      * constructs a set object
      * and keep all data til
      * the scope is running
      * @param string $primaryKeyName name of the primary key. this key must exists
-     * @param array $data
-     * @throws \InvalidArgumentException
+     * @param array|null $data
+     * @param string|null $classname
      */
-    public function __construct ( $primaryKeyName, array $data = NULL,
-                                  $classname = NULL ) {
-        if ($primaryKeyName === NULL || !is_string( $primaryKeyName )) {
-            throw new \InvalidArgumentException( "Keyname is needed" );
+    public function __construct(string $primaryKeyName, array $data = NULL,
+                                string $classname = NULL)
+    {
+        if ($primaryKeyName === NULL || !is_string($primaryKeyName)) {
+            throw new InvalidArgumentException("Key-Name is needed");
         }
         $this->__keyName = $primaryKeyName;
         if ($classname != NULL) {
             $this->__objectName = $classname;
         }
-        parent::__construct( $data );
+        parent::__construct($data);
     }
 
     /**
      * returns the key for scope cache
-     * @param string $key
+     * @param string|null $key
      * @return string
      */
-    private function getKey ( $key = NULL ) {
+    private function getKey(string $key = NULL): string
+    {
         if ($key === NULL) {
             $key = $this->__keyName;
             return $this->getClassKey() . '_' . $this->$key;
@@ -49,20 +54,22 @@ abstract class PropsFactory extends Props {
     }
 
     /**
-    * gets the current primary key
-    * @return string the primary key
-    */
-    public function getPrimaryKey(){
+     * gets the current primary key
+     * @return string the primary key
+     */
+    public function getPrimaryKey(): string
+    {
         return $this->__keyName;
     }
 
     /**
-     * ovewrite parent becasue of catching all
+     * overwrite parent because of catching all
      * props
-     * @param array $data
+     * @param array|object|null $data
      */
-    public function applyData ( $data = NULL ) {
-        parent::applyData( $data );
+    public function applyData(array|object $data = NULL)
+    {
+        parent::applyData($data);
         if ($data != null) {
             self::$propData[$this->getKey()] = $this;
             self::$keyCache[$this->getClassKey()] = $this->__keyName;
@@ -71,38 +78,42 @@ abstract class PropsFactory extends Props {
         }
     }
 
-    public function getIds () {
-        return array_keys( self::$__ids[$this->getClassKey()] );
+    public function getIds()
+    {
+        return array_keys(self::$__ids[$this->getClassKey()]);
     }
 
     /**
      * set the classname
-     * @param type $name
+     * @param string $name
      */
-    public function setClassName ( $name ) {
+    public function setClassName(string $name)
+    {
         $this->__objectName = $name;
     }
 
     /**
      * returns class specific key
-     * @return string
+     * @return false|string
      */
-    private function getClassKey () {
+    private function getClassKey(): false|string
+    {
         if ($this->__objectName != NULL) {
             return $this->__objectName;
         }
-        return get_class( $this );
+        return get_class($this);
     }
 
     /**
      * returns the content by the
-     * id if these already builded. if not is returns NULL
-     * @param mixed $id
-     * @return self
+     * id if these already build. if not is returns NULL
+     * @param string $id
+     * @return PropsFactory|null
      */
-    public function getProps ( $id ) {
-        if (isset( self::$propData[$this->getKey( $id )] )) {
-            return self::$propData[$this->getKey( $id )];
+    public function getProps(string $id): self|null
+    {
+        if (isset(self::$propData[$this->getKey($id)])) {
+            return self::$propData[$this->getKey($id)];
         }
         return NULL;
     }
@@ -112,22 +123,24 @@ abstract class PropsFactory extends Props {
      * is exchanges
      *
      * @param mixed $id
-     * @return self
+     * @return bool|mixed
      */
-    public function fetch ( $id ) {
-        if (isset( self::$propData[$this->getKey( $id )] )) {
-            return self::$propData[$this->getKey( $id )];
+    public function fetch($id)
+    {
+        if (isset(self::$propData[$this->getKey($id)])) {
+            return self::$propData[$this->getKey($id)];
         }
         return false;
     }
 
     /**
-     * copy propertie to self
+     * copy property to self
      * @param self $source
      */
-    private function copyProps ( self $source ) {
+    private function copyProps(self $source)
+    {
         foreach ($source as $keyName => $data) {
-            if (substr( $keyName, 0, 2 ) !== '__') {
+            if (substr($keyName, 0, 2) !== '__') {
                 $this->$keyName = $data;
             }
         }
@@ -135,12 +148,13 @@ abstract class PropsFactory extends Props {
 
     /**
      *
-     * @param type $id
+     * @param string $id
      * @return self
      */
-    public static function factory ( $id ) {
+    public static function factory(string $id)
+    {
         $key = get_called_class() . '_' . $id;
-        if (isset( self::$propData[$key] )) {
+        if (isset(self::$propData[$key])) {
             return self::$propData[$key];
         }
         return NULL;
@@ -150,12 +164,13 @@ abstract class PropsFactory extends Props {
      * checks if data already exists.
      * same as self::factory($id) === NULL
      * but just checking if entry created
-     * @param type $id
-     * @return type
+     * @param string $id
+     * @return bool
      */
-    public static function dataExists ( $id ) {
+    public static function dataExists(string $id): bool
+    {
         $key = get_called_class() . '_' . $id;
-        return isset( self::$propData[$key] );
+        return isset(self::$propData[$key]);
     }
 
 }

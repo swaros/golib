@@ -1,5 +1,7 @@
 <?php
 namespace golib\Content\Dom;
+use SimpleXMLElement;
+
 /**
  * Description of XmlSimple
  *

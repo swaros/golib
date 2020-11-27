@@ -6,7 +6,7 @@ namespace golib\Types;
  *
  * @author tziegler
  *
- * properties that ignores case sesnitive keys
+ * properties that ignores case sensitive keys
  * to solve renaming issues
  */
 class PropIgnoreCase extends Props{

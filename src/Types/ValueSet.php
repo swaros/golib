@@ -1,5 +1,8 @@
 <?php
+
 namespace golib\Types;
+
+use InvalidArgumentException;
 
 /**
  * Description of valueSet
@@ -7,23 +10,25 @@ namespace golib\Types;
  * @author tziegler
  *
  * this is a Element that handles
- * sperated entries like 158,225,369
+ * separated entries like 158,225,369
  * and make sure all needed elements are set count wise.
  * except you return NULL on getMaxEntries.this will
  * disable the count check
  *
  */
-abstract class ValueSet {
+abstract class ValueSet
+{
 
-    private $values = NULL;
+    private array|string|null $values = NULL;
 
     /**
-     *
-     * @param string/array $initialEntrie a array or seperatded string
+     * ValueSet constructor.
+     * @param array|string|null $initialEntry
      */
-    public function __construct($initialEntrie = NULL) {
-        if ($initialEntrie !== NULL){
-            $this->applyData($initialEntrie, true);
+    public function __construct(string|array $initialEntry = NULL)
+    {
+        if ($initialEntry !== NULL) {
+            $this->applyData($initialEntry, true);
         }
 
         $this->checkCount();
@@ -31,26 +36,25 @@ abstract class ValueSet {
 
     /**
      * apply content via string or array
-     * @param array/string $applyEntrie is an array or and seperated string
+     * @param array|string|null $applyEntry
      * @param boolean $full if true the whole set will be overwritten.on flase just the fisrt entries
-     * @throws \InvalidArgumentException
      */
-    public function applyData($applyEntrie = NULL, $full = true){
-
-        if (is_array($applyEntrie)){
+    public function applyData(array|string $applyEntry = NULL, $full = true)
+    {
+        if (is_array($applyEntry)) {
             if ($full) {
-                $this->values = $applyEntrie;
+                $this->values = $applyEntry;
             } else {
-                $this->values = array_replace($this->values, $applyEntrie);
+                $this->values = array_replace($this->values, $applyEntry);
             }
-        }elseif (is_string($applyEntrie)){
+        } elseif (is_string($applyEntry)) {
             if ($full) {
-                $this->values = explode($this->getDelimiter(), $applyEntrie);
+                $this->values = explode($this->getDelimiter(), $applyEntry);
             } else {
-                $this->values = array_replace($this->values,explode($this->getDelimiter(), $applyEntrie));
+                $this->values = array_replace($this->values, explode($this->getDelimiter(), $applyEntry));
             }
         } else {
-            throw new \InvalidArgumentException("Argument must be an array or Speparated string");
+            throw new InvalidArgumentException("Argument must be an array or Separated string");
         }
 
     }
@@ -60,10 +64,11 @@ abstract class ValueSet {
      * triggers an error if getMaxEntries Returns a number
      * and this number is not equal to the count of elements.
      */
-    private function checkCount(){
-        $cnt = (int) $this->getMaxEntries();
-        if ($cnt !== NULL && count($this->values) !== $cnt){
-            trigger_error("Wrong count of Elements. Expected are $cnt. But right now there are ". count($this->values));
+    private function checkCount()
+    {
+        $cnt = (int)$this->getMaxEntries();
+        if ($cnt !== NULL && count($this->values) !== $cnt) {
+            trigger_error("Wrong count of Elements. Expected are $cnt. But right now there are " . count($this->values));
         }
 
     }
@@ -72,36 +77,38 @@ abstract class ValueSet {
      * magig getter for string operations
      * @return string
      */
-    function __toString() {
+    function __toString()
+    {
         $this->checkCount();
         return $this->formatToString();
     }
 
     /**
      * mapper for imploding content
-     * @return type
+     * @return string
      */
-    public function selfImplode(){
+    public function selfImplode(): string
+    {
         return implode($this->getDelimiter(), $this->values);
     }
 
     /**
      * return the max allowed count of entries.
      * return NULL if no limit needed
-     * @return int
+     * @return int|null
      */
-    abstract protected function getMaxEntries();
+    abstract protected function getMaxEntries(): int|null;
 
     /**
      * return the delimiter
      * @return string
      */
-    abstract protected function getDelimiter();
+    abstract protected function getDelimiter(): string;
 
     /**
      * Return the string format ot these entries.
-     * @return String formated string
+     * @return String formatted string
      */
-    abstract protected function formatToString();
+    abstract protected function formatToString(): string;
 
 }

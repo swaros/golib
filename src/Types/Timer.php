@@ -2,51 +2,64 @@
 
 namespace golib\Types;
 
+use Exception;
+use InvalidArgumentException;
+
 /**
  * Description of Timer
  *
  * @author tziegler
  */
-class Timer implements Types {
+class Timer implements Types
+{
 
-    private $currentTime;
+    private int $currentTime;
 
     const DAY = 86400;
     const HOUR = 3600;
     const MINUTE = 60;
 
-    private $fitNonExistingDates = true;
+    private bool $fitNonExistingDates;
 
-    public function __toString () {
+    public function __toString()
+    {
         return $this->getSqlFormat();
     }
 
-    public function __construct ( $curTime = NULL, $fitNonExistingDates = true ) {
+    /**
+     * Timer constructor.
+     * @param null|mixed $curTime
+     * @param bool $fitNonExistingDates
+     * @throws Exception
+     */
+    public function __construct($curTime = NULL, bool $fitNonExistingDates = true)
+    {
         $this->fitNonExistingDates = $fitNonExistingDates;
-        if (is_string( $curTime ) && $this->validTimeStr( $curTime )) {
-            $this->setTimeBySqlTimeString( $curTime );
+        if (is_string($curTime) && $this->validTimeStr($curTime)) {
+            $this->setTimeBySqlTimeString($curTime);
         } else {
-            $this->setTime( $curTime );
+            $this->setTime($curTime);
         }
     }
 
     /**
-     * set the time in miliseconds.
+     * set the time in milliseconds.
      * if null submitted  the current time will be used
-     * @param type $curTime
+     * @param Timer|int|null $curTime
      * @throws Exception
      */
-    public function setTime ( $curTime = NULL ) {
+    public function setTime(null|int|self $curTime = NULL)
+    {
 
         if ($curTime == NULL) {
             $this->currentTime = time();
         } elseif ($curTime instanceof self) {
             $this->currentTime = $curTime->currentTime;
         } else {
-            if (is_numeric( $curTime )) {
+            if (is_numeric($curTime)) {
                 $this->currentTime = $curTime;
             } else {
-                Throw new \Exception( "Wrong Time submitted" );
+                throw new Exception("Wrong Time submitted");
             }
         }
     }
@@ -55,22 +68,25 @@ class Timer implements Types {
      * sets time by using a DateTime formated string
      * like "1979-01-01 00:00:00"
      * @param string $timeStr
+     * @throws Exception
      */
-    public function setTimeBySqlTimeString ( $timeStr ) {
-        if ($this->validTimeStr( $timeStr )) {
-            $this->setTime( strtotime( $timeStr ) );
+    public function setTimeBySqlTimeString(string $timeStr)
+    {
+        if ($this->validTimeStr($timeStr)) {
+            $this->setTime(strtotime($timeStr));
         } else {
-            Throw new \InvalidArgumentException( "({$timeStr}) is not a valid time format" );
+            throw new InvalidArgumentException("({$timeStr}) is not a valid time format");
         }
     }
 
     /**
      * gets the different from now
      * positive is past
-     * negativ is future
+     * negative is future
      * @return int
      */
-    public function diffToNow () {
+    public function diffToNow(): int
+    {
         return time() - $this->currentTime;
     }
 
@@ -80,7 +96,8 @@ class Timer implements Types {
      * negativ means the time is already reached
      * @return int
      */
-    public function timeLeft () {
+    public function timeLeft()
+    {
         return $this->currentTime - time();
     }
 
@@ -89,8 +106,9 @@ class Timer implements Types {
      * Like "2010-01-05 11:05:25"
      *
      */
-    public function getSqlFormat () {
-        $date = date( 'Y-m-d H:i:s', $this->currentTime );
+    public function getSqlFormat()
+    {
+        $date = date('Y-m-d H:i:s', $this->currentTime);
         if ($date === '-0001-11-30 00:00:00') {
             return '0000-00-00 00:00:00';
         }
@@ -101,64 +119,74 @@ class Timer implements Types {
      * returns current time
      * @return int
      */
-    public function getTime () {
+    public function getTime()
+    {
         return $this->currentTime;
     }
 
     /**
      * check if the timestring a nown date
-     * @param type $timeString
-     * @return type
+     * @param string $timeString
+     * @return bool
      */
-    private function isNonExistingTimeString ( $timeString ) {
-        return $timeString != date( 'Y-m-d H:i:s', strtotime( $timeString ) );
+    private function isNonExistingTimeString(string $timeString): bool
+    {
+        return $timeString != date('Y-m-d H:i:s', strtotime($timeString));
     }
 
     /**
      * converts a date to the next possible date
      * if this date not exists
-     * @param type $timeString
-     * @return type
+     * @param string $timeString
+     * @return string
      */
-    private function getPossibleDateString ( $timeString ) {
-        return date( 'Y-m-d H:i:s', strtotime( $timeString ) );
+    private function getPossibleDateString(string $timeString): string
+    {
+        return date('Y-m-d H:i:s', strtotime($timeString));
     }
 
     /**
-     * validate an string ... only valid datestring will pass
-     * @param string $time formated for Y-m-d H:i:s
-     * @return boolan
+     * validate an string ... only valid date string will pass
+     * @param string $time formatted for Y-m-d H:i:s
+     * @return bool
      */
-    public function validTimeStr ( $time ) {
+    public function validTimeStr(string $time): bool
+    {
         if ($time === '0000-00-00 00:00:00') {
             return true;
         }
 
-        if ($this->fitNonExistingDates && $this->isNonExistingTimeString( $time )) {
-            $time = $this->getPossibleDateString( $time );
+        if ($this->fitNonExistingDates && $this->isNonExistingTimeString($time)) {
+            $time = $this->getPossibleDateString($time);
         }
 
-        return (is_string( $time ) && strlen( $time ) == 19 && $time == date( 'Y-m-d H:i:s',
-                                                                              strtotime( $time ) ));
+        return (
+            is_string($time)
+            && strlen($time) == 19
+            && $time == date('Y-m-d H:i:s', strtotime($time))
+        );
     }
 
     /**
      *
      * @return string
      */
-    public function getValue () {
+    public function getValue(): string
+    {
         return $this->getSqlFormat();
     }
 
     /**
      * create a new object by myself and
      * add submitted seconds
-     * @param type $add
-     * @return \GLib\Set\Timer
+     * @param int $add
+     * @return Timer
+     * @throws Exception
      */
-    public function cloneTimeAdd ( $add ) {
+    public function cloneTimeAdd(int $add): Timer
+    {
         $newTime = $this->getTime() + ($add * 1);
-        return new Timer( $newTime );
+        return new Timer($newTime);
     }
 
 }
