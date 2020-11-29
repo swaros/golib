@@ -2,6 +2,7 @@
 
 namespace golib\Types;
 
+use Exception;
 use InvalidArgumentException;
 
 /**
@@ -25,6 +26,7 @@ abstract class PropsFactory extends Props
      * @param string $primaryKeyName name of the primary key. this key must exists
      * @param array|null $data
      * @param string|null $classname
+     * @throws Exception
      */
     public function __construct(string $primaryKeyName, array $data = NULL,
                                 string $classname = NULL)
@@ -66,6 +68,7 @@ abstract class PropsFactory extends Props
      * overwrite parent because of catching all
      * props
      * @param array|object|null $data
+     * @throws Exception
      */
     public function applyData(array|object $data = NULL)
     {
@@ -80,6 +83,7 @@ abstract class PropsFactory extends Props
 
     public function getIds()
     {
+        print_r(self::$__ids);
         return array_keys(self::$__ids[$this->getClassKey()]);
     }
 
@@ -127,24 +131,14 @@ abstract class PropsFactory extends Props
      */
     public function fetch($id)
     {
+        print_r(self::$propData);
         if (isset(self::$propData[$this->getKey($id)])) {
             return self::$propData[$this->getKey($id)];
         }
         return false;
     }
 
-    /**
-     * copy property to self
-     * @param self $source
-     */
-    private function copyProps(self $source)
-    {
-        foreach ($source as $keyName => $data) {
-            if (substr($keyName, 0, 2) !== '__') {
-                $this->$keyName = $data;
-            }
-        }
-    }
+
 
     /**
      *

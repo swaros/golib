@@ -27,20 +27,15 @@ abstract class EnumSet
      */
     private array $values;
 
-    private int $errorMode = self::ERROR_MODE_EXCEPTION;
 
     /**
      * EnumSet constructor.
      * @param array $default
-     * @param null $errorMode
      * @throws EnumException
      */
-    public function __construct(array $default = array(), $errorMode = NULL)
+    public function __construct(array $default = array())
     {
         $this->values = $default;
-        if ($errorMode !== NULL && is_int($errorMode)) {
-            $this->errorMode = $errorMode;
-        }
         $this->checkValue($default);
     }
 
@@ -55,31 +50,13 @@ abstract class EnumSet
     {
         $check = $this->getPossibleValueArray();
         if (!is_array($check) || empty($check)) {
-            $this->handleError("No Check Array defined (getPossibleValuArray())", EnumException::NoEnumsDefined);
-        }
-
-        if (!is_array($valueSet)) {
-            $this->handleError("Invalid Value, must be Array", EnumException::InvalidValue);
+            throw new EnumException("No Check Array defined (getPossibleValuArray())", EnumException::NoEnumsDefined);
         }
 
         foreach ($valueSet as $value) {
             if (!in_array($value, $check)) {
-                $this->handleError("Invalid Value, {$value} is not in ENUM", EnumException::InvalidValue);
+                throw new EnumException("Invalid Value, {$value} is not in ENUM", EnumException::InvalidValue);
             }
-        }
-    }
-
-    /**
-     * @param $msg
-     * @param $code
-     * @throws EnumException
-     */
-    private function handleError($msg, $code)
-    {
-        if ($this->errorMode === self::ERROR_MODE_TRIGGER_ERROR) {
-            trigger_error($msg . ' CODE:' . $code);
-        } else {
-            throw new EnumException($msg, $code);
         }
     }
 

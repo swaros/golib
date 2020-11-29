@@ -53,8 +53,6 @@ abstract class ValueSet
             } else {
                 $this->values = array_replace($this->values, explode($this->getDelimiter(), $applyEntry));
             }
-        } else {
-            throw new InvalidArgumentException("Argument must be an array or Separated string");
         }
 
     }

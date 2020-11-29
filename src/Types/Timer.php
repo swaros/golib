@@ -3,7 +3,6 @@
 namespace golib\Types;
 
 use Exception;
-use InvalidArgumentException;
 
 /**
  * Description of Timer
@@ -45,10 +44,10 @@ class Timer implements Types
     /**
      * set the time in milliseconds.
      * if null submitted  the current time will be used
-     * @param Timer|int|null $curTime
-     * @throws Exception
+     * @param Timer|int|string|null $curTime
+     * @throws PropertyException
      */
-    public function setTime(null|int|self $curTime = NULL)
+    public function setTime(null|int|self|string $curTime = NULL)
     {
 
         if ($curTime == NULL) {
@@ -59,7 +58,7 @@ class Timer implements Types
             if (is_numeric($curTime)) {
                 $this->currentTime = $curTime;
             } else {
-                throw new Exception("Wrong Time submitted");
+                throw new PropertyException("Wrong Time submitted");
             }
         }
     }
@@ -75,7 +74,7 @@ class Timer implements Types
         if ($this->validTimeStr($timeStr)) {
             $this->setTime(strtotime($timeStr));
         } else {
-            throw new InvalidArgumentException("({$timeStr}) is not a valid time format");
+            throw new PropertyException("({$timeStr}) is not a valid time format");
         }
     }
 
@@ -92,7 +91,7 @@ class Timer implements Types
 
     /**
      * gets the different from now
-     * positive means timeis in future
+     * positive means time is in future
      * negativ means the time is already reached
      * @return int
      */
@@ -125,7 +124,7 @@ class Timer implements Types
     }
 
     /**
-     * check if the timestring a nown date
+     * check if the string can be used for times
      * @param string $timeString
      * @return bool
      */

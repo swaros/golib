@@ -2,6 +2,8 @@
 
 namespace golib\Types;
 
+use Exception;
+
 /**
  * Description of Props
  *
@@ -12,7 +14,8 @@ namespace golib\Types;
  * class Properties
  *
  */
-abstract class Props {
+abstract class Props
+{
 
     private static array $replaceChars = array(
         '.',
@@ -24,19 +27,23 @@ abstract class Props {
     /**
      *
      * @param null|array|object $data
+     * @throws Exception
      */
-    public function __construct (array|object $data = NULL) {
-        $this->applyData( $data );
+    public function __construct(array|object $data = NULL)
+    {
+        $this->applyData($data);
     }
 
     /**
      * apply given data to properties
      * @param array|object|null $data
+     * @throws Exception
      */
-    public function applyData (array|object $data = NULL ) {
-        if (NULL != $data && is_array( $data )) {
+    public function applyData(array|object $data = NULL)
+    {
+        if (NULL != $data && is_array($data)) {
             foreach ($data as $propName => $propValue) {
-                $this->assignValue( $propName, $propValue );
+                $this->assignValue($propName, $propValue);
             }
         } else {
             $this->buildVars();
@@ -45,10 +52,12 @@ abstract class Props {
 
     /**
      * create properties without submitted data
+     * @throws Exception
      */
-    private function buildVars () {
+    private function buildVars()
+    {
         foreach ($this as $name => $var) {
-            $this->assignExisting( $name, $var );
+            $this->assignExisting($name, $var);
         }
     }
 
@@ -57,21 +66,23 @@ abstract class Props {
      * cast depending on defined default value
      * @param string $propName
      * @param mixed $propValue
+     * @throws Exception
      */
-    public function assignExisting (string $propName, $propValue ) {
-        if (is_bool( $this->$propName )) {
-            if (strtolower( $propValue ) == 'false') {
-                $propValue = false;
+    public function assignExisting(string $propName, $propValue)
+    {
+        if (isset($this->$propName)) {
+            if (is_bool($this->$propName)) {
+                if (strtolower($propValue) == 'false') {
+                    $propValue = false;
+                }
+                $this->$propName = (bool)$propValue;
+            } elseif (is_int($this->$propName)) {
+                $this->$propName = (int)$propValue;
+            } elseif ($this->$propName instanceof Timer || $this->$propName == MapConst::TIMER) {
+                $this->$propName = new Timer($propValue);
+            } else {
+                $this->$propName = $propValue;
             }
-            $this->$propName = (bool) $propValue;
-        } elseif (is_int( $this->$propName )) {
-            $this->$propName = (int) $propValue;
-        } elseif (is_bool( $this->$propName )) {
-            $this->$propName = (bool) $propValue;
-        } elseif ($this->$propName instanceof Timer || $this->$propName == MapConst::TIMER) {
-            $this->$propName = new Timer( $propValue );
-        } else {
-            $this->$propName = $propValue;
         }
     }
 
@@ -80,20 +91,23 @@ abstract class Props {
      *
      * @param string $propNameOrig
      * @param mixed $propValue
+     * @throws Exception
      */
-    public function assignValue (string $propNameOrig, $propValue ) {
-        $propNameA = str_replace( self::$replaceChars, '_', $propNameOrig );
-        $propName = preg_replace( "/[^A-Za-z0-9_]/", "", $propNameA );
-        if (property_exists( $this, $propName ) && $this->$propName !== NULL) {
-            $this->assignExisting( $propName, $propValue );
+    public function assignValue(string $propNameOrig, $propValue)
+    {
+        $propNameA = str_replace(self::$replaceChars, '_', $propNameOrig);
+        $propName = preg_replace("/[^A-Za-z0-9_]/", "", $propNameA);
+        if (property_exists($this, $propName) && $this->$propName !== NULL) {
+            $this->assignExisting($propName, $propValue);
         } elseif ($propName !== '') {
             $this->$propName = $propValue;
         }
     }
 
-    public function __clone () {
+    public function __clone()
+    {
         foreach ($this as $name => &$var) {
-            if (is_object( $var )) {
+            if (is_object($var)) {
                 $var = clone $var;
             }
         }

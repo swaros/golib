@@ -14,19 +14,19 @@ use ReflectionException;
 abstract class ConstEnum extends Enum
 {
 
-    public function __construct($default = NULL, $errorMode = NULL)
+    public function __construct($default = NULL)
     {
-        parent::__construct($default, $errorMode);
+        parent::__construct($default);
     }
 
+    /**
+     * @return array
+     * @throws ReflectionException
+     */
     public function getPossibleValueArray(): array
     {
-        try {
-            $myself = new ReflectionClass($this);
-            return $myself->getConstants();
-        } catch (ReflectionException $e) {
-            return [];
-        }
+        $myself = new ReflectionClass($this);
+        return $myself->getConstants();
     }
 
 }

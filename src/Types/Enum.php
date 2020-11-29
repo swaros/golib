@@ -23,20 +23,14 @@ abstract class Enum
      */
     private null|string $value;
 
-    private int $errorMode = EnumDef::ERROR_MODE_EXCEPTION;
-
     /**
      * Enum constructor.
      * @param null $default
-     * @param null $errorMode
      * @throws EnumException
      */
-    public function __construct($default = NULL, $errorMode = NULL)
+    public function __construct($default = NULL)
     {
         $this->value = $default;
-        if ($errorMode !== NULL && is_int($errorMode)) {
-            $this->errorMode = $errorMode;
-        }
         $this->checkValue($default);
     }
 
@@ -51,28 +45,13 @@ abstract class Enum
 
         $check = $this->getPossibleValueArray();
         if (!is_array($check) || empty($check)) {
-            $this->handleError("No Check Array defined (getPossibleValueArray())", EnumException::NoEnumsDefined);
+            throw new EnumException("No Check Array defined (getPossibleValueArray())", EnumException::NoEnumsDefined);
         }
         if (!in_array($value, $check)) {
-            $this->handleError("Invalid Value", EnumException::InvalidValue);
+            throw new EnumException("Invalid Value", EnumException::InvalidValue);
+
         }
     }
-
-    /**
-     * handles errors
-     * @param $msg
-     * @param $code
-     * @throws EnumException
-     */
-    private function handleError($msg, $code)
-    {
-        if ($this->errorMode === EnumDef::ERROR_MODE_TRIGGER_ERROR) {
-            trigger_error($msg . ' CODE:' . $code);
-        } else {
-            throw new EnumException($msg, $code);
-        }
-    }
-
 
     function __toString()
     {

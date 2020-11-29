@@ -3,8 +3,10 @@
 namespace Types;
 
 use golib\Types\Enum;
+use golib\Types\EnumDef;
 use golib\Types\EnumException;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Warning;
 
 class EnumTest extends TestCase
 {
@@ -27,6 +29,12 @@ class EnumTest extends TestCase
         $this->assertEquals("tiger", $class);
     }
 
+    public function testToError2() {
+        $this->expectException(EnumException::class);
+        new TestCl2("monster");
+
+    }
+
     public function testGetPossibleValueArrayAndValue()
     {
         $class = new TestCl1("tiger");
@@ -45,5 +53,13 @@ class TestCl1 extends Enum {
         return [
             "tiger"
         ];
+    }
+}
+
+class TestCl2 extends Enum {
+
+    function getPossibleValueArray()
+    {
+        return null;
     }
 }

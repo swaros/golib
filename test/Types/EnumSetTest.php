@@ -38,6 +38,18 @@ class EnumSetTest extends TestCase
         $this->assertEquals("set_b,set_a",(string)$enum2);
         $this->assertEquals("set_b",(string)$enum);
     }
+
+    public function testFailureNoDef() {
+        $this->expectException(EnumException::class);
+        $this->expectExceptionCode(EnumException::NoEnumsDefined);
+        new TestEnumSetForFailure();
+    }
+
+    public function testFailureInvalidValue() {
+        $this->expectException(EnumException::class);
+        $this->expectExceptionCode(EnumException::InvalidValue);
+        new TestEnumSet(["george"]);
+    }
 }
 
 ################### test class ##############
@@ -47,5 +59,11 @@ class TestEnumSet extends EnumSet {
     function getPossibleValueArray()
     {
         return ["set_a","set_b"];
+    }
+}class TestEnumSetForFailure extends EnumSet {
+
+    function getPossibleValueArray()
+    {
+        return null;
     }
 }
