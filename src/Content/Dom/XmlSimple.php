@@ -65,9 +65,9 @@ abstract class XmlSimple
      * @param string $keyName
      * @param string $valueName
      * @param bool $flat
-     * @return array|null
+     * @return array
      */
-    public function getNodeKeyedArray(string $xPath, string $keyName, string $valueName, bool $flat = true)
+    public function getNodeKeyedArray(string $xPath, string $keyName, string $valueName, bool $flat = true): array
     {
         $usePath = "{$xPath}/*[@*]";
         $res = $this->content->xpath($usePath);
@@ -110,7 +110,7 @@ abstract class XmlSimple
      * @param string $atrName
      * @return string|null
      */
-    public function getNodeAttribute(string $xPath, string $atrName):string|null
+    public function getNodeAttribute(string $xPath, string $atrName): string|null
     {
         $res = $this->content->xpath($xPath);
         foreach ($res as $set) {
@@ -122,23 +122,17 @@ abstract class XmlSimple
 
     /**
      *
-     * @param \SimpleXMLElement $element
-     * @param type $atrName
-     * @return type
+     * @param SimpleXMLElement $element
+     * @param string $atrName
+     * @return string
      */
-    public function getNodeAttrBySmplXml(\SimpleXMLElement $element, $atrName)
+    public function getNodeAttrBySmplXml(SimpleXMLElement $element, string $atrName): string
     {
         $set = $element->attributes();
         return (string)$set[$atrName];
     }
 
-    /**
-     *
-     * @param \SimpleXMLElement $element
-     * @param type $atrName
-     * @return type
-     */
-    public function getNodeChildBySmplXml(\SimpleXMLElement $element, $atrName)
+    public function getNodeChildBySmplXml(SimpleXMLElement $element, string $atrName): SimpleXMLElement|null
     {
         $set = $element->children();
         if (!isset($set->$atrName)) {
@@ -148,28 +142,30 @@ abstract class XmlSimple
     }
 
     /**
-     *
-     * @param \SimpleXMLElement $element
-     * @param type $atrName
-     * @return type
+     * returns all attributes as key-value array
+     * @param SimpleXMLElement $element
+     * @return array
      */
-    public function getNodeAttrArrayBySmplXml(\SimpleXMLElement $element)
+    public function getNodeAttrArrayBySmplXml(SimpleXMLElement $element): array
     {
-        $data = (array)$element->attributes();
-        return (array)$data['@attributes'];
+        if ($element->attributes()->count() > 0) {
+            $data = (array)$element->attributes();
+            return (array)$data['@attributes'];
+        }
+        return [];
     }
 
 
     /**
-     * return node attribut in any case as integer.
+     * return node attribute as integer.
      * the value that stands for fail an be set as
-     * optional paramater (-1 by default)
+     * optional parameter (-1 by default)
      * @param string $xPath
      * @param string $atrName
-     * @param bool $failReturn
+     * @param int $failReturn
      * @return int
      */
-    public function getNodeAttributeInt($xPath, $atrName, $failReturn = -1)
+    public function getNodeAttributeInt(string $xPath,string $atrName,int $failReturn = -1)
     {
         $val = $this->getNodeAttribute($xPath, $atrName);
         if ($val === NULL || $val === false || !is_numeric($val)) {
@@ -179,25 +175,27 @@ abstract class XmlSimple
     }
 
     /**
-     * return node attribut value in boolean
-     * @param type $xPath
-     * @param type $atrName
-     * @param type $failReturn
+     * return node attribute value from xpath as boolean.
+     * by default, if no entry exists or the value
+     * can not be interpreted as bool, it returns false.
+     * this default can be set to true with the 3. parameter
+     * @param string $xPath
+     * @param string $atrName
+     * @param bool $failReturn
      * @return boolean
      */
-    public function getNodeAttributeBool($xPath, $atrName, $failReturn = false)
+    public function getNodeAttributeBool(string $xPath, string $atrName, bool $failReturn = false): bool
     {
         $val = $this->getNodeAttribute($xPath, $atrName);
+        if ($val === NULL) {
+            return $failReturn;
+        }
         // string sets true/false
         if (strtolower($val) === 'false') {
             return false;
         }
         if (strtolower($val) === 'true') {
             return true;
-        }
-        if ($val === NULL || !is_bool($val)) {
-
-            return $failReturn;
         }
         return (bool)$val;
     }

@@ -25,10 +25,10 @@ abstract class Enum
 
     /**
      * Enum constructor.
-     * @param null $default
+     * @param null|string $default
      * @throws EnumException
      */
-    public function __construct($default = NULL)
+    public function __construct(string $default = NULL)
     {
         $this->value = $default;
         $this->checkValue($default);

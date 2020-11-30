@@ -14,7 +14,7 @@ use ReflectionException;
 abstract class ConstEnum extends Enum
 {
 
-    public function __construct($default = NULL)
+    public function __construct(string|null $default = NULL)
     {
         parent::__construct($default);
     }

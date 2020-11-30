@@ -83,7 +83,6 @@ abstract class PropsFactory extends Props
 
     public function getIds()
     {
-        print_r(self::$__ids);
         return array_keys(self::$__ids[$this->getClassKey()]);
     }
 
@@ -131,7 +130,6 @@ abstract class PropsFactory extends Props
      */
     public function fetch($id)
     {
-        print_r(self::$propData);
         if (isset(self::$propData[$this->getKey($id)])) {
             return self::$propData[$this->getKey($id)];
         }
