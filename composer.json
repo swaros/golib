@@ -10,7 +10,7 @@
             "email": "tziegler@googlemail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "license": "MIT",
     "require": {
         "php": "8.*",
